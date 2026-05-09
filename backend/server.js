@@ -147,6 +147,8 @@ app.get('/api/data', (req, res) => {
         return res.status(401).json({ error: 'Unauthorized' });
     }
     
+    // Prevent browser caching for real-time dashboard
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.json(sensorData);
 });
 

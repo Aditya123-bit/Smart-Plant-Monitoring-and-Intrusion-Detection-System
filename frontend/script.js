@@ -47,7 +47,8 @@ if (window.location.pathname.includes('dashboard')) {
         // Fetch data function
         async function fetchDashboardData() {
             try {
-                const response = await fetch('/api/data');
+                // Add timestamp to prevent browser caching GET request
+                const response = await fetch(`/api/data?t=${new Date().getTime()}`);
                 
                 if (response.status === 401) {
                     window.location.href = 'login.html';
