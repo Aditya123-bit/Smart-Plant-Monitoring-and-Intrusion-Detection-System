@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intruder Detection | Smart IoT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col">
+        <div class="p-6 border-b border-slate-100 flex items-center gap-3">
+            <div class="w-8 h-8 rounded bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+                <i class="fa-solid fa-leaf"></i>
+            </div>
+            <span class="font-bold text-slate-800 text-lg">Smart IoT</span>
+        </div>
+        
+        <div class="p-4 flex-1">
+            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 ml-2">Dashboards</div>
+            <nav class="space-y-2">
+                <a href="dashboard-soil.html" class="nav-link flex items-center gap-3 w-full">
+                    <i class="fa-solid fa-seedling w-5"></i> Plant Health
+                </a>
+                <a href="dashboard-intruder.html" class="nav-link active flex items-center gap-3 w-full">
+                    <i class="fa-solid fa-shield-halved w-5"></i> Security View
+                </a>
+            </nav>
+        </div>
+        
+        <div class="p-4 border-t border-slate-100">
+            <button id="logout-btn" class="nav-link text-red-500 hover:text-red-700 hover:bg-red-50 flex items-center gap-3 w-full">
+                <i class="fa-solid fa-arrow-right-from-bracket w-5"></i> Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+        
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+            <div class="flex items-center gap-4">
+                <h1 class="text-xl font-bold text-slate-800">Security & Intrusion Detection</h1>
+                <div class="hidden md:flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full">
+                    <div id="connection-dot" class="status-dot status-offline"></div>
+                    <span class="text-xs font-medium text-slate-600" id="connection-text">Offline</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-medium text-slate-500" id="current-time">00:00</span>
+                <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold border border-slate-300">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+                <span id="navbar-username" class="text-sm font-semibold text-slate-700 hidden sm:block">User</span>
+                <button class="md:hidden text-slate-500 text-xl"><i class="fa-solid fa-bars"></i></button>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="p-8 max-w-6xl mx-auto w-full flex-1">
+            
+            <!-- Welcome text -->
+            <div class="mb-8 animate-fade-in">
+                <h2 class="text-2xl font-bold text-slate-800">Security Overview</h2>
+                <p class="text-slate-500 mt-1">Monitor perimeter via IR sensors.</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                
+                <!-- Intruder Card -->
+                <div id="intruder-card" class="clean-card p-6 animate-fade-in delay-100">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-500 mb-1">Perimeter Status</p>
+                            <h3 id="intruder-status" class="text-3xl font-bold text-slate-800">Loading</h3>
+                        </div>
+                        <div id="intruder-icon-wrapper" class="status-icon-wrapper bg-green-light">
+                            <i id="intruder-icon" class="fa-solid fa-shield-check"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center gap-2">
+                        <span id="intruder-msg" class="text-sm font-medium text-slate-600">Waiting for data...</span>
+                    </div>
+                </div>
+
+                <!-- Last Sync Card -->
+                <div class="clean-card p-6 animate-fade-in delay-200">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm font-semibold text-slate-500 mb-1">Last Sync</p>
+                            <h3 id="last-updated" class="text-xl font-bold text-slate-800 mt-2">--</h3>
+                        </div>
+                        <div class="status-icon-wrapper bg-yellow-light">
+                            <i class="fa-regular fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span id="last-time-value" class="text-sm font-mono text-slate-500">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Logs -->
+            <div class="clean-card p-6 animate-fade-in delay-300">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-slate-800">System Activity Logs</h3>
+                    <button class="text-blue-500 hover:text-blue-700 text-sm font-semibold"><i class="fa-solid fa-download mr-1"></i> Export</button>
+                </div>
+                
+                <div id="log-container" class="terminal-log">
+                    <div class="log-entry"><span class="log-time">[Init]</span> <span class="log-info">Connecting to logging service...</span></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
